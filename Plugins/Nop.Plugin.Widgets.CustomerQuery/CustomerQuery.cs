@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LinqToDB.DataProvider;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.CustomerQuery.Components;
 using Nop.Plugin.Widgets.CustomerQuery.Data;
+using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
-using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Widgets.CustomerQuery
 {
@@ -97,8 +91,11 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             // Any DB or setting setup
             await base.InstallAsync();
 
+           
+
+
         }
-       
+
 
         public override async Task UninstallAsync()
         {
