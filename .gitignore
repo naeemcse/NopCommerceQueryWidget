@@ -1,0 +1,73 @@
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# NopCommerce specific
+Presentation/Nop.Web/Plugins/*
+!Presentation/Nop.Web/Plugins/README.txt
+Presentation/Nop.Web/wwwroot/bundles/*
+Presentation/Nop.Web/wwwroot/db_backups/*
+Presentation/Nop.Web/wwwroot/files/exportimport/*
+Presentation/Nop.Web/App_Data/DataProtectionKeys/*
+Presentation/Nop.Web/App_Data/TempUploads/*
+Presentation/Nop.Web/App_Data/installedPlugins.json
+Presentation/Nop.Web/App_Data/plugins.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+packages/
+*.nupkg
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Custom plugins build output
+Plugins/Nop.Plugin.*/[Bb]in/
+Plugins/Nop.Plugin.*/[Oo]bj/
+
+# Keep plugin specific files
+!Plugins/Nop.Plugin.Widgets.CustomerQuery/plugin.json
+!Plugins/Nop.Plugin.Widgets.CustomerQuery/Views/
+!Plugins/Nop.Plugin.Widgets.CustomerQuery/Content/

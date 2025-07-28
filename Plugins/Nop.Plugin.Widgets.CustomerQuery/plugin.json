@@ -1,0 +1,12 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Customer Query Submission",
+  "SystemName": "Widgets.CustomerQuery",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.80" ],
+  "Author": "nopStation team",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Widgets.CustomerQuery.dll",
+  "Description": "This plugin allows you to sents query to admin and showp owner ",
+  "Category": "Widget"
+}

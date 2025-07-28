@@ -1,0 +1,51 @@
+﻿@model SubmitQueryModel
+@{
+    Layout = "_ColumnsOne";
+    ViewBag.PageTitle = T("Plugins.Widgets.CustomerQuery.SubmitQuery").Text;
+}
+
+<form asp-controller="CustomerQuery" asp-action="SubmitQuery" method="post">
+    <div class="page contact-page">
+        <div class="page-title">
+            <h1>@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</h1>
+        </div>
+        <div class="page-body">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="form-fields">
+                <div class="inputs">
+                    <label asp-for="Name" asp-postfix=":"></label>
+                    <input asp-for="Name" class="name" />
+                    <span asp-validation-for="Name"></span>
+                </div>
+                <div class="inputs">
+                    <label asp-for="Email" asp-postfix=":"></label>
+                    <input asp-for="Email" class="email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="inputs">
+                    <label asp-for="Subject" asp-postfix=":"></label>
+                    <input asp-for="Subject" class="subject" />
+                    <span asp-validation-for="Subject"></span>
+                </div>
+                <div class="inputs">
+                    <label asp-for="Message" asp-postfix=":"></label>
+                    <textarea asp-for="Message" class="message"></textarea>
+                    <span asp-validation-for="Message"></span>
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button type="submit" class="button-1 submit-button">
+                @T("Plugins.Widgets.CustomerQuery.Submit")
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $("form").validate();
+        });
+    </script>
+}
