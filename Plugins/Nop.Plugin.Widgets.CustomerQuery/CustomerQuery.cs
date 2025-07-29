@@ -87,7 +87,12 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 ["Plugins.Widgets.CustomerQuery.Fields.Subject"] = "Subject",
                 ["Plugins.Widgets.CustomerQuery.Fields.Message"] = "Message",
                 ["Plugins.Widgets.CustomerQuery.Fields.Message.Required"] = "Message is required",
-                ["Plugins.Widgets.CustomerQuery.Submit"] = "Submit Query"
+                ["Plugins.Widgets.CustomerQuery.Submit"] = "Submit Query",
+                ["Plugins.Widgets.CustomerQuery.Email.Customer.Subject"] = "Your query has been received",
+                ["Plugins.Widgets.CustomerQuery.Email.Customer.Body"] = "<p>Dear %CustomerName%,</p><p>Thank you for submitting your query. We have received your message and will respond shortly.</p><p>Your message:</p><p>%QueryMessage%</p><p>Best regards,</p><p>%StoreName%</p>",
+                ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Subject"] = "New customer query received",
+                ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body"] = "<p>A new customer query has been submitted:</p><p>From: %CustomerName% (%CustomerEmail%)</p><p>Subject: %QuerySubject%</p><p>Message:</p><p>%QueryMessage%</p>"
+
 
             });
             // Any DB or setting setup

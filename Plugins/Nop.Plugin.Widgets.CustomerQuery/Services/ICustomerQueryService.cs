@@ -43,4 +43,16 @@ public interface ICustomerQueryService
     /// <param name="query">Customer query</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task DeleteQueryAsync(CustomerQueryRecord query);
+
+    /// <summary>
+    /// Sends notification email to customer about their query
+    /// </summary>
+    /// <param name="query">Customer query</param>
+    Task SendCustomerNotificationAsync(CustomerQueryRecord query);
+
+    /// <summary>
+    /// Sends notification email to store owner(s) about new query
+    /// </summary>
+    /// <param name="query">Customer query</param>
+    Task SendStoreOwnerNotificationAsync(CustomerQueryRecord query);
 }

@@ -154,7 +154,7 @@ public partial class SmtpBuilder : ISmtpBuilder
         }
         catch (Exception ex)
         {
-            client.Dispose();
+            client.Dispose();   
             throw new NopException(ex.Message, ex);
         }
     }
