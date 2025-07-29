@@ -83,10 +83,12 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 ["Plugins.Widgets.CustomerQuery.Fields.Name.Required"] = "Name is required",
                 ["Plugins.Widgets.CustomerQuery.Fields.Email"] = "Email",
                 ["Plugins.Widgets.CustomerQuery.Fields.Email.Required"] = "Email is required",
+                ["Plugins.Widgets.CustomerQuery.Fields.Email.Wrong"] = "Wrong email format",
                 ["Plugins.Widgets.CustomerQuery.Fields.Subject"] = "Subject",
                 ["Plugins.Widgets.CustomerQuery.Fields.Message"] = "Message",
                 ["Plugins.Widgets.CustomerQuery.Fields.Message.Required"] = "Message is required",
                 ["Plugins.Widgets.CustomerQuery.Submit"] = "Submit Query"
+
             });
             // Any DB or setting setup
             await base.InstallAsync();

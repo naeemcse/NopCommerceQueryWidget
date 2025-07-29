@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using FluentMigrator;
-using Nop.Core;
+﻿using FluentMigrator;
 using Nop.Data.Extensions;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;

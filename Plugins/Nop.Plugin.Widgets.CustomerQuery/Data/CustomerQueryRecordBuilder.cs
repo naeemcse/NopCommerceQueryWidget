@@ -1,5 +1,4 @@
 ﻿using FluentMigrator.Builders.Create.Table;
-using Nop.Data.Extensions;
 using Nop.Data.Mapping.Builders;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 
