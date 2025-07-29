@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Routing;
 using Nop.Services.Plugins;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Infrastructure;
@@ -27,24 +25,22 @@ public class CustomerQueryMenuProvider : BasePlugin, IAdminMenuPlugin
 
     public async Task ManageSiteMapAsync(AdminMenuItem rootNode)
     {
-        var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
-        if (pluginNode == null)
+        var systemNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "System");
+        if (systemNode == null)
             return;
 
-        var menuItem = new AdminMenuItem
+        systemNode.ChildNodes.Add(new AdminMenuItem
         {
             SystemName = "CustomerQueries",
             Title = "Customer Queries",
-            IconClass = "far fa-dot-circle",
-            Visible = true
-        };
-
-        // Set the URL instead of controller/action names
-        menuItem.Url = $"/Admin/AdminCustomerQuery/List";
-
-        pluginNode.ChildNodes.Add(menuItem);
+            IconClass = "far fa-dot-circle", // Changed to match System menu style
+            Visible = true,
+            PermissionNames = new List<string> { Nop.Services.Security.StandardPermission.System.MANAGE_SYSTEM_LOG }, // Add appropriate permission
+            Url = "/Admin/AdminCustomerQuery/List"
+        });
 
         await Task.CompletedTask;
     }
+
     #endregion
 }

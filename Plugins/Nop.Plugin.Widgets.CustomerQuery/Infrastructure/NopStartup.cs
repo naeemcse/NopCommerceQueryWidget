@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Web.Framework.Menu;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Infrastructure;
 
@@ -21,6 +22,7 @@ public class NopStartup : INopStartup
     {
         // Register menu provider
         services.AddScoped<IAdminMenuPlugin, CustomerQueryMenuProvider>();
+        services.AddScoped<IRouteProvider, RouteProvider>();
         services.AddScoped<ICustomerQueryService, CustomerQueryService>();
     }
 
