@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 using Nop.Services.Messages;
@@ -63,14 +58,31 @@ public class CustomerQueryService : ICustomerQueryService
     /// <summary>
     /// Gets all customer queries
     /// </summary>
+    /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+    /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+    /// <param name="email">Email to search for</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>Customer queries</returns>
-    public virtual async Task<IPagedList<CustomerQueryRecord>> GetAllQueriesAsync(int pageIndex = 0, int pageSize = int.MaxValue)
+    public virtual async Task<IPagedList<CustomerQueryRecord>> GetAllQueriesAsync(
+        DateTime? createdFromUtc = null,
+        DateTime? createdToUtc = null,
+        string email = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue)
     {
-        var query = from q in _customerQueryRepository.Table
-                   orderby q.CreatedOnUtc descending
-                   select q;
+        var query = _customerQueryRepository.Table;
+
+        if (createdFromUtc.HasValue)
+            query = query.Where(q => q.CreatedOnUtc >= createdFromUtc.Value);
+
+        if (createdToUtc.HasValue)
+            query = query.Where(q => q.CreatedOnUtc <= createdToUtc.Value);
+
+        if (!string.IsNullOrWhiteSpace(email))
+            query = query.Where(q => q.Email.Contains(email));
+
+        query = query.OrderByDescending(q => q.CreatedOnUtc);
 
         return await query.ToPagedListAsync(pageIndex, pageSize);
     }

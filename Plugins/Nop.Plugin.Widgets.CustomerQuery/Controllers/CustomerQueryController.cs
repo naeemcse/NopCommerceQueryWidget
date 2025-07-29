@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Data;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
+using Nop.Plugin.Widgets.CustomerQuery.Models.Admin;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Public;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Services.Messages;
@@ -14,8 +15,7 @@ public class CustomerQueryController: BasePluginController
     private readonly IWorkContext _workContext;
 
     public CustomerQueryController(
-
-         ICustomerQueryService customerQueryService,
+        ICustomerQueryService customerQueryService,
         IWorkContext workContext)
     {
         _customerQueryService = customerQueryService;
@@ -49,7 +49,4 @@ public class CustomerQueryController: BasePluginController
        // SuccessNotification("Your query has been submitted successfully.");
         return RedirectToRoute("HomePage");
     }
-
-
-
 }

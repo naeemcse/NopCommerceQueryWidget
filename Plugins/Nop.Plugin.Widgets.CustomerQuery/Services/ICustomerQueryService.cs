@@ -18,11 +18,18 @@ public interface ICustomerQueryService
     /// <summary>
     /// Gets all customer queries
     /// </summary>
+    /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
+    /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
+    /// <param name="email">Email to search for</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
     /// <returns>Customer queries</returns>
-    Task<IPagedList<CustomerQueryRecord>> GetAllQueriesAsync(int pageIndex = 0, int pageSize = int.MaxValue);
-
+    Task<IPagedList<CustomerQueryRecord>> GetAllQueriesAsync(
+        DateTime? createdFromUtc = null,
+        DateTime? createdToUtc = null,
+        string email = null,
+        int pageIndex = 0,
+        int pageSize = int.MaxValue);
     /// <summary>
     /// Gets a customer query by identifier
     /// </summary>

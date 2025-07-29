@@ -28,10 +28,6 @@
     <ProjectReference Include="$(SolutionDir)\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj" />
     <ClearPluginAssemblies Include="$(SolutionDir)\Build\ClearPluginAssemblies.proj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Models\Admin\" />
-  </ItemGroup>
   <!-- This target executes after "Build" target -->
   <Target Name="NopTarget" AfterTargets="Build">
     <!-- Delete unnecessary libraries from plugins path -->

@@ -1,0 +1,118 @@
+@model CustomerQuerySearchModel
+
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = "Customer Queries";
+}
+
+<form asp-controller="AdminCustomerQuery" asp-action="List" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            Customer Queries
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchEmail" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchEmail" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchCreatedOnFrom" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchCreatedOnFrom" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchCreatedOnTo" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchCreatedOnTo" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 col-md-offset-5">
+                                    <button type="button" id="search-queries" class="btn btn-primary btn-search">
+                                        <i class="fas fa-search"></i>
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "queries-grid",
+                                UrlRead = new DataUrl("List", "AdminCustomerQuery", null),
+                                SearchButtonId = "search-queries",
+                                Length = Model.PageSize,
+                                LengthMenu = Model.AvailablePageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchEmail)),
+                                    new FilterParameter(nameof(Model.SearchCreatedOnFrom)),
+                                    new FilterParameter(nameof(Model.SearchCreatedOnTo))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(CustomerQueryModel.Name))
+                                    {
+                                        Title = "Name",
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(CustomerQueryModel.Email))
+                                    {
+                                        Title = "Email",
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(CustomerQueryModel.Subject))
+                                    {
+                                        Title = "Subject",
+                                        Width = "200"
+                                    },
+                                    new ColumnProperty(nameof(CustomerQueryModel.Message))
+                                    {
+                                        Title = "Message",
+                                        Width = "300"
+                                    },
+                                    new ColumnProperty(nameof(CustomerQueryModel.CreatedOnUtc))
+                                    {
+                                        Title = "Submitted On",
+                                        Width = "200",
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(CustomerQueryModel.Id))
+                                    {
+                                        Title = "Delete",
+                                        Width = "100",
+                                        ClassName = NopColumnClassDefaults.Button,
+                                        Render = new RenderButtonRemove("Delete")
+                                    }
+                                }
+                            })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

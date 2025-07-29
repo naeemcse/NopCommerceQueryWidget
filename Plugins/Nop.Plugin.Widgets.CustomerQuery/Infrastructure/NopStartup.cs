@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
+using Nop.Web.Framework.Menu;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Infrastructure;
 
@@ -18,6 +19,8 @@ public class NopStartup : INopStartup
     /// <param name="configuration">Configuration of the application</param>
     public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        // Register menu provider
+        services.AddScoped<IAdminMenuPlugin, CustomerQueryMenuProvider>();
         services.AddScoped<ICustomerQueryService, CustomerQueryService>();
     }
 
