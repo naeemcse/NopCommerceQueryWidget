@@ -112,7 +112,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         new()
         {
             Name = "Customer.Query.Notification",
-            Subject = "%Store.Name%. New query from %Customer.FullName%",
+            Subject = "New query from %Customer.FullName%",
             Body = "<p>Hello,</p>" +
                    "<p>A new query has been submitted:</p>" +
                    "<p>Customer: %Customer.FullName% (%Customer.Email%)</p>" +
@@ -124,7 +124,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         new()
         {
             Name = "Customer.Query.CustomerNotification",
-            Subject = "%Store.Name%. Your query has been received",
+            Subject = "Your query has been received",
             Body = "<p>Hello %Customer.FullName%,</p>" +
                    "<p>Thank you for contacting us. We have received your query and will respond shortly.</p>" +
                    "<p>Your message:</p>" +
@@ -139,16 +139,10 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 await _messageTemplateService.InsertMessageTemplateAsync(template);
             }
 
-
-            //  await _messageTemplateService.InsertMessageTemplateAsync(messageTemplates);
             // Any DB or setting setup
-            await base.InstallAsync();
-
-           
-
+            await base.InstallAsync();          
 
         }
-
 
         public override async Task UninstallAsync()
         {

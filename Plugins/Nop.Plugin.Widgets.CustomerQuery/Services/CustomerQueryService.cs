@@ -5,9 +5,7 @@ using Nop.Data;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 using Nop.Plugin.Widgets.CustomerQuery.Extensions;
 using Nop.Services.Customers;
-using Nop.Services.Localization;
 using Nop.Services.Messages;
-using Nop.Services.Stores;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Services;
 
@@ -20,16 +18,10 @@ public class CustomerQueryService : ICustomerQueryService
 
     private readonly IRepository<CustomerQueryRecord> _customerQueryRepository;
     private readonly IEmailAccountService _emailAccountService;
-    private readonly IStoreService _storeService;
     private readonly IStoreContext _storeContext;
-    private readonly IEmailSender _emailSender;
     private readonly EmailAccountSettings _emailAccountSettings;
-    private readonly ILocalizationService _localizationService;
     private readonly ICustomerService _customerService;
-    private readonly IQueuedEmailService _queuedEmailService;
-
     private readonly IMessageTemplateService _messageTemplateService;
-    private readonly IMessageTokenProvider _messageTokenProvider;
     private readonly IWorkflowMessageService _workflowMessageService;
     private readonly IWorkContext _workContext;
 
@@ -40,31 +32,21 @@ public class CustomerQueryService : ICustomerQueryService
     public CustomerQueryService(
        IRepository<CustomerQueryRecord> customerQueryRepository,
         IEmailAccountService emailAccountService,
-         IQueuedEmailService queuedEmailService,
-        IStoreService storeService,
         IStoreContext storeContext,
-        IEmailSender emailSender,
         EmailAccountSettings emailAccountSettings,
-        ILocalizationService localizationService,
         ICustomerService customerService,
         IMessageTemplateService messageTemplateService,
-        IMessageTokenProvider messageTokenProvider,
         IWorkflowMessageService workflowMessageService,
         IWorkContext workContext
         )
     {
         _customerQueryRepository = customerQueryRepository;
         _emailAccountService = emailAccountService;
-        _queuedEmailService = queuedEmailService;
-        _storeService = storeService;
-        _storeContext = storeContext;
-        _emailSender = emailSender;
+        _storeContext = storeContext;       
         _emailAccountSettings = emailAccountSettings;
-        _localizationService = localizationService;
         _customerService = customerService;
 
         _messageTemplateService = messageTemplateService;
-        _messageTokenProvider = messageTokenProvider;
         _workflowMessageService = workflowMessageService;
         _workContext = workContext;
     }
@@ -161,8 +143,7 @@ public class CustomerQueryService : ICustomerQueryService
 
         // Get tokens
         var commonTokens = new List<Token>
-            {
-                new("%Store.Name%",store.Name),
+            {                
                 new("CustomerQuery.Subject", query.Subject),
                 new("CustomerQuery.Message", query.Message),
                 new("Customer.FullName", query.Name),
@@ -179,44 +160,6 @@ public class CustomerQueryService : ICustomerQueryService
         await _workflowMessageService.SendCustomerQueryCustomerNotificationMessageAsync(messageTemplate[0], emailAccount, query,
             languageId,
             commonTokens);
-
-/*
-        // Build email message
-        var subject = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.Customer.Subject");
-        var body = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.Customer.Body");
-
-        body = body.Replace("%CustomerName%", query.Name)
-                  .Replace("%QueryMessage%", query.Message)
-                  .Replace("%StoreName%", store.Name);
-
-        // Send real email to customer
-        *//* await _emailSender.SendEmailAsync(
-             emailAccount,
-             subject,
-             body,
-             emailAccount.Email,
-             emailAccount.DisplayName,
-             query.Email,
-             query.Name);*//*
-
-
-        //  queue email for later sending
-
-        var email = new QueuedEmail
-        {
-            Priority = QueuedEmailPriority.High,
-            From = emailAccount.Email,
-            FromName = emailAccount.DisplayName,
-            To = query.Email,
-            ToName = query.Name,
-            Subject = subject,
-            Body = body,
-            CreatedOnUtc = DateTime.UtcNow,
-            EmailAccountId = emailAccount.Id,
-            DontSendBeforeDateUtc = null
-        };
-*/
-     //   await _queuedEmailService.InsertQueuedEmailAsync(email);
     }
 
 
@@ -228,10 +171,8 @@ public class CustomerQueryService : ICustomerQueryService
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
-
-
         var commonTokens = new List<Token>
-    { new("%Store.Name%",store.Name),
+    { new("Store.Name",store.Name),
         new("CustomerQuery.Subject", query.Subject),
         new("CustomerQuery.Message", query.Message),
         new("Customer.FullName", query.Name),
@@ -253,66 +194,18 @@ public class CustomerQueryService : ICustomerQueryService
         if (!admins.Any())
             return;
 
-
-
-/*
-
-        var subject = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.StoreOwner.Subject");
-        var body = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body");
-
-        body = body.Replace("%CustomerName%", query.Name)
-                  .Replace("%CustomerEmail%", query.Email)
-                  .Replace("%QuerySubject%", query.Subject ?? "N/A")
-                  .Replace("%QueryMessage%", query.Message)
-                  .Replace("%StoreName%", store.Name);
-
-        // sample queue for data
-        //  queue email for later sending
-
-        var email = new QueuedEmail
-        {
-            Priority = QueuedEmailPriority.High,
-            From = emailAccount.Email,
-            FromName = emailAccount.DisplayName,
-            To = emailAccount.Email,
-            ToName = emailAccount.DisplayName,
-            Subject = subject,
-            Body = body,
-            CreatedOnUtc = DateTime.UtcNow,
-            EmailAccountId = emailAccount.Id,
-            DontSendBeforeDateUtc = null
-        };
-*/
-
         // Send email to each administrator
         foreach (var admin in admins)
         {
             if (string.IsNullOrEmpty(admin.Email))
                 continue;
-            // for sending real email
-            /*await _emailSender.SendEmailAsync(
-                emailAccount,
-                subject,
-                body,
-                emailAccount.Email,
-                emailAccount.DisplayName,
-                admin.Email,
-                admin.Username ?? admin.Email);*/
-
-            //email.To = admin.Email;
-
             var emailTo = admin.Email;
 
             await _workflowMessageService.SendCustomerQueryStoreOwnerNotificationMessageAsync(messageTemplate, emailAccount, query, emailTo,
                 languageId,commonTokens);
 
-          //  await _queuedEmailService.InsertQueuedEmailAsync(email);
-
         }
 
     }
-
-
-
         #endregion
     }
