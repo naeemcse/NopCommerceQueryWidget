@@ -1,4 +1,5 @@
 ﻿using Nop.Core;
+using Nop.Core.Domain.Messages;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Services;
@@ -55,4 +56,7 @@ public interface ICustomerQueryService
     /// </summary>
     /// <param name="query">Customer query</param>
     Task SendStoreOwnerNotificationAsync(CustomerQueryRecord query);
-}
+
+     Task<EmailAccount> GetEmailAccountAsync();
+    
+    }

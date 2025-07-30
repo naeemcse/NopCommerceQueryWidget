@@ -1,5 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.CustomerQuery.Components;
@@ -9,6 +10,7 @@ using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Services.Plugins;
 using Nop.Web.Framework.Infrastructure;
 
@@ -25,6 +27,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         protected readonly IWebHelper _webHelper;
         protected readonly WidgetSettings _widgetSettings;
         protected readonly IMigrationManager _migrationManager;
+        protected readonly ICustomerQueryService _customerQueryService;
+        private readonly IMessageTemplateService _messageTemplateService;
 
         #endregion
 
@@ -36,7 +40,10 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             ISettingService settingService,
             IWebHelper webHelper,
             WidgetSettings widgetSettings,
-             IMigrationManager migrationManager)
+             IMigrationManager migrationManager,
+             ICustomerQueryService customerQueryService,
+             IMessageTemplateService messageTemplateService
+             )
         {
             _localizationService = localizationService;
             _fileProvider = fileProvider;
@@ -45,6 +52,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             _webHelper = webHelper;
             _widgetSettings = widgetSettings;
             _migrationManager = migrationManager;
+            _customerQueryService = customerQueryService;
+            _messageTemplateService = messageTemplateService;
         }
 
         #endregion
@@ -95,6 +104,43 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
 
             });
+
+            var emailAccount = _customerQueryService.GetEmailAccountAsync();
+
+            var messageTemplates = new List<MessageTemplate>
+    {
+        new()
+        {
+            Name = "Customer.Query.Notification",
+            Subject = "%Store.Name%. New query from %Customer.FullName%",
+            Body = "<p>Hello,</p>" +
+                   "<p>A new query has been submitted:</p>" +
+                   "<p>Customer: %Customer.FullName% (%Customer.Email%)</p>" +
+                   "<p>Subject: %CustomerQuery.Subject%</p>" +
+                   "<p>Message: %CustomerQuery.Message%</p>",
+            IsActive = true,
+            EmailAccountId = emailAccount.Id
+        },
+        new()
+        {
+            Name = "Customer.Query.CustomerNotification",
+            Subject = "%Store.Name%. Your query has been received",
+            Body = "<p>Hello %Customer.FullName%,</p>" +
+                   "<p>Thank you for contacting us. We have received your query and will respond shortly.</p>" +
+                   "<p>Your message:</p>" +
+                   "<p>%CustomerQuery.Message%</p>",
+            IsActive = true,
+            EmailAccountId = emailAccount.Id
+        }
+    };
+
+            foreach (var template in messageTemplates)
+            {
+                await _messageTemplateService.InsertMessageTemplateAsync(template);
+            }
+
+
+            //  await _messageTemplateService.InsertMessageTemplateAsync(messageTemplates);
             // Any DB or setting setup
             await base.InstallAsync();
 

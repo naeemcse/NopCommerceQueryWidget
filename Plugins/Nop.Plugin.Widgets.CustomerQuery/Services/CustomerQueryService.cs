@@ -3,6 +3,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
+using Nop.Plugin.Widgets.CustomerQuery.Extensions;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -27,6 +28,11 @@ public class CustomerQueryService : ICustomerQueryService
     private readonly ICustomerService _customerService;
     private readonly IQueuedEmailService _queuedEmailService;
 
+    private readonly IMessageTemplateService _messageTemplateService;
+    private readonly IMessageTokenProvider _messageTokenProvider;
+    private readonly IWorkflowMessageService _workflowMessageService;
+    private readonly IWorkContext _workContext;
+
     #endregion
 
     #region Ctor
@@ -40,7 +46,12 @@ public class CustomerQueryService : ICustomerQueryService
         IEmailSender emailSender,
         EmailAccountSettings emailAccountSettings,
         ILocalizationService localizationService,
-           ICustomerService customerService)
+        ICustomerService customerService,
+        IMessageTemplateService messageTemplateService,
+        IMessageTokenProvider messageTokenProvider,
+        IWorkflowMessageService workflowMessageService,
+        IWorkContext workContext
+        )
     {
         _customerQueryRepository = customerQueryRepository;
         _emailAccountService = emailAccountService;
@@ -51,6 +62,11 @@ public class CustomerQueryService : ICustomerQueryService
         _emailAccountSettings = emailAccountSettings;
         _localizationService = localizationService;
         _customerService = customerService;
+
+        _messageTemplateService = messageTemplateService;
+        _messageTokenProvider = messageTokenProvider;
+        _workflowMessageService = workflowMessageService;
+        _workContext = workContext;
     }
 
     #endregion
@@ -126,7 +142,7 @@ public class CustomerQueryService : ICustomerQueryService
     /// <summary>
     /// Gets the email account to use for sending
     /// </summary>
-    protected virtual async Task<EmailAccount> GetEmailAccountAsync()
+    public virtual async Task<EmailAccount> GetEmailAccountAsync()
     {
         var emailAccount = await _emailAccountService.GetEmailAccountByIdAsync(_emailAccountSettings.DefaultEmailAccountId)
             ?? (await _emailAccountService.GetAllEmailAccountsAsync()).FirstOrDefault();
@@ -143,6 +159,28 @@ public class CustomerQueryService : ICustomerQueryService
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
+        // Get tokens
+        var commonTokens = new List<Token>
+            {
+                new("%Store.Name%",store.Name),
+                new("CustomerQuery.Subject", query.Subject),
+                new("CustomerQuery.Message", query.Message),
+                new("Customer.FullName", query.Name),
+                new("Customer.Email", query.Email)
+            };
+
+        var messageTemplate = await _messageTemplateService.GetMessageTemplatesByNameAsync("Customer.Query.CustomerNotification");
+
+        var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+        var languageId = workingLanguage.Id;
+
+
+        // Send notification to customer
+        await _workflowMessageService.SendCustomerQueryCustomerNotificationMessageAsync(messageTemplate[0], emailAccount, query,
+            languageId,
+            commonTokens);
+
+/*
         // Build email message
         var subject = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.Customer.Subject");
         var body = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.Customer.Body");
@@ -152,14 +190,14 @@ public class CustomerQueryService : ICustomerQueryService
                   .Replace("%StoreName%", store.Name);
 
         // Send real email to customer
-        /* await _emailSender.SendEmailAsync(
+        *//* await _emailSender.SendEmailAsync(
              emailAccount,
              subject,
              body,
              emailAccount.Email,
              emailAccount.DisplayName,
              query.Email,
-             query.Name);*/
+             query.Name);*//*
 
 
         //  queue email for later sending
@@ -177,8 +215,8 @@ public class CustomerQueryService : ICustomerQueryService
             EmailAccountId = emailAccount.Id,
             DontSendBeforeDateUtc = null
         };
-
-        await _queuedEmailService.InsertQueuedEmailAsync(email);
+*/
+     //   await _queuedEmailService.InsertQueuedEmailAsync(email);
     }
 
 
@@ -190,6 +228,23 @@ public class CustomerQueryService : ICustomerQueryService
 
         var store = await _storeContext.GetCurrentStoreAsync();
 
+
+
+        var commonTokens = new List<Token>
+    { new("%Store.Name%",store.Name),
+        new("CustomerQuery.Subject", query.Subject),
+        new("CustomerQuery.Message", query.Message),
+        new("Customer.FullName", query.Name),
+        new("Customer.Email", query.Email)
+    };
+
+        var messageTemplate = (await _messageTemplateService.GetMessageTemplatesByNameAsync("Customer.Query.Notification")).FirstOrDefault();
+
+        var workingLanguage = await _workContext.GetWorkingLanguageAsync();
+        var languageId = workingLanguage.Id;
+
+
+
         // Get all administrators
         var adminRole = await _customerService.GetCustomerRoleBySystemNameAsync(NopCustomerDefaults.AdministratorsRoleName);
         if (adminRole == null)
@@ -197,6 +252,11 @@ public class CustomerQueryService : ICustomerQueryService
         var admins = await _customerService.GetAllCustomersAsync(customerRoleIds: new[] { adminRole.Id });
         if (!admins.Any())
             return;
+
+
+
+/*
+
         var subject = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.StoreOwner.Subject");
         var body = await _localizationService.GetResourceAsync("Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body");
 
@@ -222,7 +282,7 @@ public class CustomerQueryService : ICustomerQueryService
             EmailAccountId = emailAccount.Id,
             DontSendBeforeDateUtc = null
         };
-
+*/
 
         // Send email to each administrator
         foreach (var admin in admins)
@@ -238,13 +298,20 @@ public class CustomerQueryService : ICustomerQueryService
                 emailAccount.DisplayName,
                 admin.Email,
                 admin.Username ?? admin.Email);*/
-            email.To = admin.Email;
 
-            await _queuedEmailService.InsertQueuedEmailAsync(email);
+            //email.To = admin.Email;
+
+            var emailTo = admin.Email;
+
+            await _workflowMessageService.SendCustomerQueryStoreOwnerNotificationMessageAsync(messageTemplate, emailAccount, query, emailTo,
+                languageId,commonTokens);
+
+          //  await _queuedEmailService.InsertQueuedEmailAsync(email);
 
         }
 
     }
+
 
 
         #endregion
