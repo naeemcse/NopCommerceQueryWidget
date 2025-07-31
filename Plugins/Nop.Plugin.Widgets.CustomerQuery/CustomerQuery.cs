@@ -69,7 +69,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HomepageTop });
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeaderMenuAfter });
         }
 
 
@@ -104,7 +104,23 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 ["Plugins.Widgets.CustomerQuery.Email.Customer.Subject"] = "Your query has been received",
                 ["Plugins.Widgets.CustomerQuery.Email.Customer.Body"] = "<p>Dear %CustomerName%,</p><p>Thank you for submitting your query. We have received your message and will respond shortly.</p><p>Your message:</p><p>%QueryMessage%</p><p>Best regards,</p><p>%StoreName%</p>",
                 ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Subject"] = "New customer query received",
-                ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body"] = "<p>A new customer query has been submitted:</p><p>From: %CustomerName% (%CustomerEmail%)</p><p>Subject: %QuerySubject%</p><p>Message:</p><p>%QueryMessage%</p>"
+                ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body"] = "<p>A new customer query has been submitted:</p><p>From: %CustomerName% (%CustomerEmail%)</p><p>Subject: %QuerySubject%</p><p>Message:</p><p>%QueryMessage%</p>",
+                // Display Names (Labels)
+                ["Plugins.Widgets.CustomerQuery.List.SearchEmail"] = "Email",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnFrom"] = "Start Date",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnTo"] = "End Date",
+
+                // Hints (tooltips)
+                ["Plugins.Widgets.CustomerQuery.List.SearchEmail.Hint"] = "Search by customer email",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnFrom.Hint"] = "Search for queries from this date",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnTo.Hint"] = "Search for queries up to this date",
+
+                // Validation messages
+                ["Plugins.Widgets.CustomerQuery.List.SearchEmail.Wrong"] = "Please enter a valid email address",
+                ["Plugins.Widgets.CustomerQuery.List.SearchDate.Wrong"] = "End date must be greater than or equal to start date"
+
+
+
 
 
             });

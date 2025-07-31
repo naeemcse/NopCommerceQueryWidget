@@ -1,118 +1,123 @@
 @model CustomerQuerySearchModel
-
 @{
     Layout = "_AdminLayout";
     ViewBag.PageTitle = "Customer Queries";
+    bool hideSearchBlock = !Model.SearchShowHidden;
 }
-
-<form asp-controller="AdminCustomerQuery" asp-action="List" method="post">
-    <div class="content-header clearfix">
-        <h1 class="float-left">
-            Customer Queries
-        </h1>
-    </div>
-
-    <section class="content">
-        <div class="container-fluid">
-            <div class="form-horizontal">
-                <div class="cards-group">
-                    <div class="card card-default card-search">
-                        <div class="card-body">
+ 
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="CustomerQueries.HideSearchBlock">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-magnifying-glass" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <div class="form-group row">
                                         <div class="col-md-4">
-                                            <nop-label asp-for="SearchEmail" />
+                                            <nop-label asp-for="SearchEmail" asp-hint="Enter email to search for specific customer queries" />
                                         </div>
                                         <div class="col-md-8">
                                             <nop-editor asp-for="SearchEmail" />
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchCreatedOnFrom" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchCreatedOnFrom" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-4">
-                                            <nop-label asp-for="SearchCreatedOnTo" />
-                                        </div>
-                                        <div class="col-md-8">
-                                            <nop-editor asp-for="SearchCreatedOnTo" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-7 col-md-offset-5">
-                                    <button type="button" id="search-queries" class="btn btn-primary btn-search">
-                                        <i class="fas fa-search"></i>
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                 </div>
 
-                    <div class="card card-default">
-                        <div class="card-body">
-                            @await Html.PartialAsync("Table", new DataTablesModel
-                            {
-                                Name = "queries-grid",
-                                UrlRead = new DataUrl("List", "AdminCustomerQuery", null),
-                                SearchButtonId = "search-queries",
-                                Length = Model.PageSize,
-                                LengthMenu = Model.AvailablePageSizes,
-                                Filters = new List<FilterParameter>
-                                {
-                                    new FilterParameter(nameof(Model.SearchEmail)),
-                                    new FilterParameter(nameof(Model.SearchCreatedOnFrom)),
-                                    new FilterParameter(nameof(Model.SearchCreatedOnTo))
-                                },
-                                ColumnCollection = new List<ColumnProperty>
-                                {
-                                    new ColumnProperty(nameof(CustomerQueryModel.Name))
-                                    {
-                                        Title = "Name",
-                                        Width = "200"
-                                    },
-                                    new ColumnProperty(nameof(CustomerQueryModel.Email))
-                                    {
-                                        Title = "Email",
-                                        Width = "200"
-                                    },
-                                    new ColumnProperty(nameof(CustomerQueryModel.Subject))
-                                    {
-                                        Title = "Subject",
-                                        Width = "200"
-                                    },
-                                    new ColumnProperty(nameof(CustomerQueryModel.Message))
-                                    {
-                                        Title = "Message",
-                                        Width = "300"
-                                    },
-                                    new ColumnProperty(nameof(CustomerQueryModel.CreatedOnUtc))
-                                    {
-                                        Title = "Submitted On",
-                                        Width = "200",
-                                        Render = new RenderDate()
-                                    },
-                                    new ColumnProperty(nameof(CustomerQueryModel.Id))
-                                    {
-                                        Title = "Delete",
-                                        Width = "100",
-                                        ClassName = NopColumnClassDefaults.Button,
-                                        Render = new RenderButtonRemove("Delete")
-                                    }
-                                }
-                            })
+                                  <div class="col-md-6">                                  
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchCreatedOnFrom" asp-hint="Search for queries from this date" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchCreatedOnFrom" asp-format="{0:d}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SearchCreatedOnTo" asp-hint="Search for queries upto this date" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="SearchCreatedOnTo" asp-format="{0:d}  />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-queries" class="btn btn-primary btn-search"><i class="fas fa-magnifying-glass"></i>@T("Admin.Common.Search")</button>
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "queries-grid",
+                                                UrlRead = new DataUrl("List", "AdminCustomerQuery", null),
+                                                SearchButtonId = "search-queries",
+                                                Length = Model.PageSize,
+                                                LengthMenu = Model.AvailablePageSizes,
+                                                Filters = new List<FilterParameter>
+                                                {
+                                                new FilterParameter(nameof(Model.SearchEmail)),
+                                                new FilterParameter(nameof(Model.SearchCreatedOnFrom)),
+                                                new FilterParameter(nameof(Model.SearchCreatedOnTo))
+                                                },
+                                                ColumnCollection = new List<ColumnProperty>
+                                                {
+                                                new ColumnProperty(nameof(CustomerQueryModel.Name))
+                                                {
+                                                Title = "Name",
+                                                Width = "200"
+                                                },
+                                                new ColumnProperty(nameof(CustomerQueryModel.Email))
+                                                {
+                                                Title = "Email",
+                                                Width = "200"
+                                                },
+                                                new ColumnProperty(nameof(CustomerQueryModel.Subject))
+                                                {
+                                                Title = "Subject",
+                                                Width = "200"
+                                                },
+                                                new ColumnProperty(nameof(CustomerQueryModel.Message))
+                                                {
+                                                Title = "Message",
+                                                Width = "300"
+                                                },
+                                                new ColumnProperty(nameof(CustomerQueryModel.CreatedOnUtc))
+                                                {
+                                                Title = "Submitted On",
+                                                Width = "200",
+                                                Render = new RenderDate()
+                                                },
+                                                new ColumnProperty(nameof(CustomerQueryModel.Id))
+                                                {
+                                                Title = "Delete",
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.Button,
+                                                Render = new RenderButtonRemove("Delete")
+                                                }
+                                                }
+                                                })
+                    </div>
+                </div>
+
             </div>
         </div>
-    </section>
-</form>
+    </div>
+</section>
+                    
+
+
+
