@@ -69,7 +69,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         /// </returns>
         public Task<IList<string>> GetWidgetZonesAsync()
         {
-            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeaderMenuAfter });
+            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeaderLinksAfter });
         }
 
 
@@ -87,6 +87,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             // Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
+                ["Admin.CustomerQueries.Details"] = "Customer Query Details",
+                ["Admin.CustomerQueries.BackToList"] = "back to customer query list",
                 ["Plugins.Widgets.CustomerQuery.SubmitQuery"] = "Submit a Query",
                 ["Plugins.Widgets.CustomerQuery.Fields.Name"] = "Name",
                 ["Plugins.Widgets.CustomerQuery.Fields.Name.Required"] = "Name is required",

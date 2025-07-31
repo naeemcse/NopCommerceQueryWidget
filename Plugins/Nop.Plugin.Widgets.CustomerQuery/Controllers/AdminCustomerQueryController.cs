@@ -81,4 +81,23 @@ public class AdminCustomerQueryController : BasePluginController
 
         return new NullJsonResult();
     }
+
+
+    public virtual async Task<IActionResult> Details(int id)
+    {
+        var query = await _customerQueryService.GetQueryByIdAsync(id);
+        if (query == null)
+            return RedirectToAction("List");
+        var model = new CustomerQueryModel
+        {
+            Id = query.Id,
+            Name = query.Name,
+            Email = query.Email,
+            Subject = query.Subject,
+            Message = query.Message,
+            CreatedOnUtc = query.CreatedOnUtc
+        };
+        return View("~/Plugins/Widgets.CustomerQuery/Views/Admin/Details.cshtml", model);
+    }
+
 }

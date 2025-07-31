@@ -28,7 +28,6 @@
                                         </div>
                                     </div>
                                  </div>
-
                                   <div class="col-md-6">                                  
                                     <div class="form-group row">
                                         <div class="col-md-4">
@@ -43,7 +42,7 @@
                                             <nop-label asp-for="SearchCreatedOnTo" asp-hint="Search for queries upto this date" />
                                         </div>
                                         <div class="col-md-8">
-                                            <nop-editor asp-for="SearchCreatedOnTo" asp-format="{0:d}  />
+                                            <nop-editor asp-for="SearchCreatedOnTo" asp-format="{0:d}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -107,9 +106,16 @@
                                                 Width = "100",
                                                 ClassName = NopColumnClassDefaults.Button,
                                                 Render = new RenderButtonRemove("Delete")
+                                                } , 
+                                                new ColumnProperty(nameof(CustomerQueryModel.Id))
+                                                {
+                                                Title = "View",
+                                                Width = "100",
+                                                ClassName = NopColumnClassDefaults.Button,
+                                                Render = new RenderButtonView(new DataUrl("Details", "AdminCustomerQuery"))
                                                 }
                                                 }
-                                                })
+                                                } )
                     </div>
                 </div>
 
