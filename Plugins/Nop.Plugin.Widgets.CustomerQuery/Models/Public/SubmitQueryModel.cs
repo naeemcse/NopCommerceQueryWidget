@@ -16,4 +16,11 @@ public record SubmitQueryModel : BaseNopModel
 
     [NopResourceDisplayName("Plugins.Widgets.CustomerQuery.Fields.Message")]
     public string Message { get; set; }
+
+
+    public bool SuccessfullySent { get; set; }
+    public string Result { get; set; }
+
+    public bool DisplayCaptcha { get; set; }
+
 }
