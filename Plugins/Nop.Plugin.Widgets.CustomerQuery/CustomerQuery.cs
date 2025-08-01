@@ -19,7 +19,7 @@ using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.CustomerQuery
 {
-    public class CustomerQuery : BasePlugin, IWidgetPlugin
+    public class CustomerQuery : BasePlugin
     {
         #region Fields
         private readonly ITopicService _topicService;
@@ -71,7 +71,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         /// A task that represents the asynchronous operation
         /// The task result contains the widget zones
         /// </returns>
-        public Task<IList<string>> GetWidgetZonesAsync()
+       /* public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeaderLinksAfter });
         }
@@ -80,7 +80,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         public Type GetWidgetViewComponent(string widgetZone)
         {
             return typeof(WidgetsCustomerQueryViewComponent);
-        }
+        }*/
 
 
         public override async Task InstallAsync()

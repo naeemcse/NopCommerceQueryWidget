@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
+using Nop.Plugin.Widgets.CustomerQuery.Factories;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Services.Events;
 using Nop.Web.Framework.Events;
@@ -25,7 +26,9 @@ public class NopStartup : INopStartup
         // Register menu provider       
         services.AddScoped<IRouteProvider, RouteProvider>();
         services.AddScoped<ICustomerQueryService, CustomerQueryService>();
-        services.AddScoped<IConsumer<AdminMenuCreatedEvent>, EventConsumer>();       
+        services.AddScoped<IConsumer<AdminMenuCreatedEvent>, EventConsumer>();
+        services.AddScoped<ICustomerQueryModelFactory, CustomerQueryModelFactory>();
+
     }
 
     /// <summary>

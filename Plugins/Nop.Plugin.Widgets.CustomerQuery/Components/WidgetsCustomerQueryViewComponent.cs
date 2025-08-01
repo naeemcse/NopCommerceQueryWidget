@@ -12,7 +12,7 @@ public class WidgetsCustomerQueryViewComponent: NopViewComponent
     public async Task<IViewComponentResult> InvokeAsync(string widgetZone, object additionalData = null)
     {
         // You can add logic here to handle the widget rendering based on the widgetZone or additionalData
-        return View("~/Plugins/Widgets.CustomerQuery/Views/PublicInfo.cshtml");
+        return View("~/Plugins/Widgets.CustomerQuery/Views/CustomerQuerey/Index.cshtml");
     }
 
 }
