@@ -1,9 +1,8 @@
-﻿@model SubmitQueryModel
+@model SubmitQueryModel
 @{
     Layout = "_ColumnsOne";
     ViewBag.PageTitle = T("Plugins.Widgets.CustomerQuery.SubmitQuery").Text;
 }
-
 
 <div class="page contact-page">
     <div class="page-title">
@@ -18,7 +17,7 @@
         }
         else
         {
-            <form asp-controller="CustomerQuery" asp-action="SubmitQuery" method="post">
+            <form asp-controller="CustomerQuery" asp-action="Index" method="post">
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="fieldset">
                     <div class="form-fields">
@@ -35,14 +34,14 @@
                             <input asp-for="Email" placeholder="@T("Plugins.Widgets.CustomerQuery.Fields.Email.Hint")" class="email" />
                             <nop-required />
                             <span asp-validation-for="Email"></span>
-                        </div>                      
-                            <div class="inputs">
-                                <label asp-for="Subject" asp-postfix=":"></label>
+                        </div>
+                        <div class="inputs">
+                            <label asp-for="Subject" asp-postfix=":"></label>
                             <nop-hint asp-for="Subject" />
 
-                                 <input asp-for="Subject" placeholder="@T("Plugins.Widgets.CustomerQuery.Fields.Subject.Hint")" class="subject" />                               
-                                <span asp-validation-for="Subject"></span>
-                            </div>                        
+                            <input asp-for="Subject" placeholder="@T("Plugins.Widgets.CustomerQuery.Fields.Subject.Hint")" class="subject" />
+                            <span asp-validation-for="Subject"></span>
+                        </div>
                         <div class="inputs">
                             <label asp-for="Message" asp-postfix=":"></label>
                             <nop-hint asp-for="Message" />

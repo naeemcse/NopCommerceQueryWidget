@@ -1,6 +1,7 @@
 ﻿using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Data.Migrations;
 using Nop.Plugin.Widgets.CustomerQuery.Components;
@@ -12,14 +13,16 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
+using Nop.Services.Topics;
 using Nop.Web.Framework.Infrastructure;
+using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.CustomerQuery
 {
     public class CustomerQuery : BasePlugin, IWidgetPlugin
     {
         #region Fields
-
+        private readonly ITopicService _topicService;
         protected readonly ILocalizationService _localizationService;
         protected readonly INopFileProvider _fileProvider;
         protected readonly IPictureService _pictureService;
@@ -42,8 +45,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             WidgetSettings widgetSettings,
              IMigrationManager migrationManager,
              ICustomerQueryService customerQueryService,
-             IMessageTemplateService messageTemplateService
-             )
+             IMessageTemplateService messageTemplateService,
+             ITopicService topicService)
         {
             _localizationService = localizationService;
             _fileProvider = fileProvider;
@@ -54,6 +57,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             _migrationManager = migrationManager;
             _customerQueryService = customerQueryService;
             _messageTemplateService = messageTemplateService;
+            _topicService = topicService;
         }
 
         #endregion
@@ -83,6 +87,26 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         {
             // Create the table using migrations
             _migrationManager.ApplyUpMigrations(typeof(CustomerQueryRecordBuilder).Assembly);
+
+            // Add topic for the menu item
+            var topic = new Topic
+            {
+                SystemName = "CustomerQuery",
+                IncludeInTopMenu = true,
+                DisplayOrder = 99,
+                Title = "Customer Query",
+                Body = "",
+                Published = true,
+                IncludeInSitemap = true,
+                AccessibleWhenStoreClosed = true,
+                IncludeInFooterColumn1 = true,
+
+            };
+
+            await _topicService.InsertTopicAsync(topic);
+            // Add the topic URL record for SEO friendly URLs
+          //  await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
+
 
             // Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
@@ -119,7 +143,9 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
                 // Validation messages
                 ["Plugins.Widgets.CustomerQuery.List.SearchEmail.Wrong"] = "Please enter a valid email address",
-                ["Plugins.Widgets.CustomerQuery.List.SearchDate.Wrong"] = "End date must be greater than or equal to start date"
+                ["Plugins.Widgets.CustomerQuery.List.SearchDate.Wrong"] = "End date must be greater than or equal to start date",
+                ["Plugins.Widgets.CustomerQuery.Success.Title"] = "Query Submitted Successfully",
+                ["Plugins.Widgets.CustomerQuery.Success.Message"] = "Thank you for your query. We have received your message and will respond to you shortly.",
 
 
 
@@ -173,6 +199,11 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
             // Delete locale resources
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.CustomerQuery");
+            // Remove the topic when uninstalling
+            var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQueryTopic");
+            if (topic != null)
+                await _topicService.DeleteTopicAsync(topic);
+
 
             // Cleanup
             await base.UninstallAsync();

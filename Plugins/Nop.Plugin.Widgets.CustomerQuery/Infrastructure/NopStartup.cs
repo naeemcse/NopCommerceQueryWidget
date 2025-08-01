@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nop.Core.Infrastructure;
@@ -21,11 +22,10 @@ public class NopStartup : INopStartup
     /// <param name="configuration">Configuration of the application</param>
     public virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        // Register menu provider
-       
+        // Register menu provider       
         services.AddScoped<IRouteProvider, RouteProvider>();
         services.AddScoped<ICustomerQueryService, CustomerQueryService>();
-        services.AddScoped<IConsumer<AdminMenuCreatedEvent>, EventConsumer>();
+        services.AddScoped<IConsumer<AdminMenuCreatedEvent>, EventConsumer>();       
     }
 
     /// <summary>

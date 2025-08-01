@@ -11,11 +11,16 @@ public class RouteProvider : IRouteProvider
     /// </summary>
     /// <param name="endpointRouteBuilder">Route builder</param>
     public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
-    {
+    {     
         endpointRouteBuilder.MapControllerRoute(
-            name: "Plugin.Widgets.CustomerQuery.SubmitQuery",
-            pattern: "submit-query",
-            defaults: new { controller = "CustomerQuery", action = "SubmitQuery" }
+               name: "Plugin.CustomerQuery",
+               pattern: "customer-query",
+               defaults: new { controller = "CustomerQuery", action = "Index" }
+           );       
+        endpointRouteBuilder.MapControllerRoute(
+            name: "CustomerQuerySuccess",
+            pattern: "customer-query/success",
+            defaults: new { controller = "CustomerQuery", action = "Success" }
         );
     }
 
