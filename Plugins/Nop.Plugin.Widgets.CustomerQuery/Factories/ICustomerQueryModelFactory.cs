@@ -10,4 +10,5 @@ namespace Nop.Plugin.Widgets.CustomerQuery.Factories;
         Task<CustomerQueryListModel> PrepareListModelAsync(CustomerQuerySearchModel searchModel);
         Task<CustomerQueryModel> PrepareQueryModelAsync(CustomerQueryModel model, CustomerQueryRecord query, bool excludeProperties = false);
         Task<SubmitQueryModel> PrepareSubmitQueryModelAsync(SubmitQueryModel model = null);
-    }
+    //Task<ConfigurationModel> PrepareConfigurationModelAsync(ConfigurationModel model);
+}

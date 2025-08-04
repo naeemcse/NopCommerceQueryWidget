@@ -13,13 +13,14 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Plugins;
+using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Infrastructure;
 using Nop.Web.Framework.Mvc.Routing;
 
 namespace Nop.Plugin.Widgets.CustomerQuery
 {
-    public class CustomerQuery : BasePlugin
+    public class CustomerQuery : BasePlugin, IWidgetPlugin
     {
         #region Fields
         private readonly ITopicService _topicService;
@@ -32,6 +33,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         protected readonly IMigrationManager _migrationManager;
         protected readonly ICustomerQueryService _customerQueryService;
         private readonly IMessageTemplateService _messageTemplateService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -46,7 +48,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
              IMigrationManager migrationManager,
              ICustomerQueryService customerQueryService,
              IMessageTemplateService messageTemplateService,
-             ITopicService topicService)
+             ITopicService topicService,
+              IUrlRecordService urlRecordService)
         {
             _localizationService = localizationService;
             _fileProvider = fileProvider;
@@ -58,6 +61,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             _customerQueryService = customerQueryService;
             _messageTemplateService = messageTemplateService;
             _topicService = topicService;
+            _urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -82,7 +86,22 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             return typeof(WidgetsCustomerQueryViewComponent);
         }*/
 
+        public Task<IList<string>> GetWidgetZonesAsync()
+        {
+            return Task.FromResult<IList<string>>(new List<string>
+        {
+            PublicWidgetZones.HeaderMenuBefore,
+            PublicWidgetZones.Footer,
+            PublicWidgetZones.AccountNavigationAfter
+        });
+        }
 
+        public Type GetWidgetViewComponent(string widgetZone)
+        {
+            return typeof(WidgetsCustomerQueryViewComponent);
+        }
+
+      
         public override async Task InstallAsync()
         {
             // Create the table using migrations
@@ -104,10 +123,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             };
 
             await _topicService.InsertTopicAsync(topic);
-            // Add the topic URL record for SEO friendly URLs
-          //  await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
-
-
+            // Add URL record for the topic
+            await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
             // Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -148,7 +165,16 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 ["Plugins.Widgets.CustomerQuery.Success.Message"] = "Thank you for your query. We have received your message and will respond to you shortly.",
 
 
-
+                // Configuration page related
+                ["Plugins.Widgets.CustomerQuery.Configuration"] = "Customer Query Configuration",
+                ["Plugins.Widgets.CustomerQuery.Settings.Enabled"] = "Enable customer query",
+                ["Plugins.Widgets.CustomerQuery.Settings.Enabled.Hint"] = "Check to enable customer query functionality",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInNavigation"] = "Display in navigation",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInNavigation.Hint"] = "Check to display customer query link in navigation menu",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInFooter"] = "Display in footer",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInFooter.Hint"] = "Check to display customer query link in footer",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInCustomerProfile"] = "Display in customer profile",
+                ["Plugins.Widgets.CustomerQuery.Settings.DisplayInCustomerProfile.Hint"] = "Check to display customer query link in customer profile"
 
 
             });
@@ -199,10 +225,23 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
             // Delete locale resources
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.CustomerQuery");
-            // Remove the topic when uninstalling
-            var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQueryTopic");
+
+            // Remove the topic and its URL record
+            var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQuery");
             if (topic != null)
+            {
+                // First get the URL records for this topic
+                var urlRecords = (await _urlRecordService.GetAllUrlRecordsAsync())
+                    .Where(ur => ur.EntityId == topic.Id && ur.EntityName == typeof(Topic).Name)
+                    .ToList();
+
+                // Delete URL records if any exist
+                if (urlRecords.Any())
+                    await _urlRecordService.DeleteUrlRecordsAsync(urlRecords);
+
+                // Delete topic
                 await _topicService.DeleteTopicAsync(topic);
+            }
 
 
             // Cleanup

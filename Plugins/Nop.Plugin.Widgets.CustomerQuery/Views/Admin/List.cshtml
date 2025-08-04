@@ -1,7 +1,9 @@
 @model CustomerQuerySearchModel
+
 @{
     Layout = "_AdminLayout";
     ViewBag.PageTitle = "Customer Queries";
+    NopHtml.SetActiveMenuItemSystemName("Topics");
     bool hideSearchBlock = !Model.SearchShowHidden;
 }
  

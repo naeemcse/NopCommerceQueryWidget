@@ -207,5 +207,5 @@ public class CustomerQueryService : ICustomerQueryService
         }
 
     }
-        #endregion
-    }
+    #endregion
+}

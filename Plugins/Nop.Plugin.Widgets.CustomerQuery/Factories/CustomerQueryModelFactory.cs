@@ -1,9 +1,12 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Admin;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Public;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
+using Nop.Services.Configuration;
+using Nop.Services.Messages;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Framework.Models.Extensions;
 
@@ -14,15 +17,24 @@ public class CustomerQueryModelFactory : ICustomerQueryModelFactory
     private readonly ICustomerQueryService _customerQueryService;
     private readonly IBaseAdminModelFactory _baseAdminModelFactory;
     private readonly IWorkContext _workContext;
+    private readonly ISettingService _settingService;
+    private readonly IEmailAccountService _emailAccountService;
+    private readonly IStoreContext _storeContext;
 
     public CustomerQueryModelFactory(
        ICustomerQueryService customerQueryService,
        IBaseAdminModelFactory baseAdminModelFactory,
-       IWorkContext workContext)
+       IWorkContext workContext,
+        ISettingService settingService,
+        IEmailAccountService emailAccountService,
+        IStoreContext storeContext)
     {
         _customerQueryService = customerQueryService;
         _baseAdminModelFactory = baseAdminModelFactory;
         _workContext = workContext;
+        _settingService = settingService;
+        _emailAccountService = emailAccountService;
+        _storeContext = storeContext;
     }
 
 
@@ -120,4 +132,6 @@ public class CustomerQueryModelFactory : ICustomerQueryModelFactory
 
         return model;
     }
+
+
 }
