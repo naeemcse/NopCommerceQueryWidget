@@ -41,13 +41,7 @@ public class EventConsumer: IConsumer<AdminMenuCreatedEvent>
             IconClass = "fas fa-list",
             Visible = true
         });
-        customerQueryMenu.ChildNodes.Add(new AdminMenuItem
-        {
-            SystemName = "CustomerQuery.Details",
-            Title = "Query Details",            
-            Visible = false
-        });
-
+        
         // Insert the menu after "Dashboard" menu item
         eventMessage.RootMenuItem.InsertAfter("Dashboard", customerQueryMenu);
     }

@@ -1,0 +1,10 @@
+﻿@model Nop.Plugin.Widgets.CustomerQuery.Models.PublicInfoModel
+
+<script asp-location="Footer">
+    $(document).ready(function() {
+        if (!$('.footer-block.information ul.list').find('a[href*="customer-query"]').length) {
+            var footerMenu = '<li><a href="@Url.RouteUrl("Plugin.CustomerQuery")">@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</a></li>';
+            $('.footer-block.information ul.list').append(footerMenu);
+        }
+    });
+</script>

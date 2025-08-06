@@ -2,7 +2,6 @@
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 using Nop.Plugin.Widgets.CustomerQuery.Models;
 using Nop.Web.Framework.Components;
-using Nop.Web.Framework.Infrastructure;
 
 namespace Nop.Plugin.Widgets.CustomerQuery.Components;
 public class WidgetsCustomerQueryViewComponent: NopViewComponent
@@ -50,6 +49,9 @@ public class WidgetsCustomerQueryViewComponent: NopViewComponent
         {
             DisplayType = displayType
         };
+
+        if(displayType=="footer")
+              return View("~/Plugins/Widgets.CustomerQuery/Views/Footer.cshtml", model);
 
         return View("~/Plugins/Widgets.CustomerQuery/Views/PublicInfo.cshtml", model);
     }

@@ -4,10 +4,9 @@
 @{
     Layout = "_AdminLayout";
     ViewBag.PageTitle = T("Admin.CustomerQueries.Details").Text;
-    NopHtml.SetActiveMenuItemSystemName("CustomerQuery.Details");
+    NopHtml.SetActiveMenuItemSystemName("CustomerQuery.List");
     
 }
-
 <form asp-controller="AdminCustomerQuery" asp-action="Details" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
@@ -18,7 +17,6 @@
             </small>
         </h1>
     </div>
-
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">

@@ -1,26 +1,16 @@
-﻿@* Plugins/Nop.Plugin.Widgets.CustomerQuery/Views/PublicInfo.cshtml *@
+﻿
 @model Nop.Plugin.Widgets.CustomerQuery.Models.PublicInfoModel
 
-@* 
 @if (Model.DisplayType == "navigation")
 {
     <li class="top-menu-item">
         <a href="@Url.RouteUrl("Plugin.CustomerQuery")">@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</a>
     </li>
 }
-else if (Model.DisplayType == "footer")
-{
-    <li>
-        <a href="@Url.RouteUrl("Plugin.CustomerQuery")">@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</a>
-    </li>
-}
+
 else if (Model.DisplayType == "account")
 {
     <li>
         <a href="@Url.RouteUrl("Plugin.CustomerQuery")" class="nav-link">@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</a>
     </li>
-}  *@
-
-<li>
-    <a href="@Url.RouteUrl("Plugin.CustomerQuery")" class="nav-link">@T("Plugins.Widgets.CustomerQuery.SubmitQuery")</a>
-</li>
+}  
