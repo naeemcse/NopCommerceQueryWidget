@@ -98,25 +98,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         {
             // Create the table using migrations
             _migrationManager.ApplyUpMigrations(typeof(CustomerQueryRecordBuilder).Assembly);
-
-            // Add topic for the menu item
-            var topic = new Topic
-            {
-                SystemName = "CustomerQuery",
-                IncludeInTopMenu = true,
-                DisplayOrder = 99,
-                Title = "Customer Query",
-                Body = "",
-                Published = true,
-                IncludeInSitemap = true,
-                AccessibleWhenStoreClosed = true,
-                IncludeInFooterColumn1 = true,
-
-            };
-
-          //  await _topicService.InsertTopicAsync(topic);
-            // Add URL record for the topic
-         //   await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
+          
             // Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -217,24 +199,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
             // Delete locale resources
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.CustomerQuery");
-
-            // Remove the topic and its URL record
-            /*var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQuery");
-            if (topic != null)
-            {
-                // First get the URL records for this topic
-                var urlRecords = (await _urlRecordService.GetAllUrlRecordsAsync())
-                    .Where(ur => ur.EntityId == topic.Id && ur.EntityName == typeof(Topic).Name)
-                    .ToList();
-
-                // Delete URL records if any exist
-                if (urlRecords.Any())
-                    await _urlRecordService.DeleteUrlRecordsAsync(urlRecords);
-
-                // Delete topic
-                await _topicService.DeleteTopicAsync(topic);
-            }*/
-
+          
             // Cleanup
             await base.UninstallAsync();
         }

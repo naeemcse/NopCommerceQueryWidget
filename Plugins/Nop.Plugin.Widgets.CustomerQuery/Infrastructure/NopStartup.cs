@@ -25,8 +25,7 @@ public class NopStartup : INopStartup
     {
         // Register menu provider       
         services.AddScoped<IRouteProvider, RouteProvider>();
-        services.AddScoped<ICustomerQueryService, CustomerQueryService>();
-        services.AddScoped<IConsumer<AdminMenuCreatedEvent>, EventConsumer>();
+        services.AddScoped<ICustomerQueryService, CustomerQueryService>();       
         services.AddScoped<ICustomerQueryModelFactory, CustomerQueryModelFactory>();
 
     }

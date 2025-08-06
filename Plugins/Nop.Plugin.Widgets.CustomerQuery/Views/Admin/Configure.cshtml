@@ -1,6 +1,9 @@
 ﻿@model ConfigurationModel
 @{
     Layout = "_ConfigurePlugin";
+    ViewBag.PageTitle = "Customer Query Configuration";
+    NopHtml.SetActiveMenuItemSystemName("CustomerQuery.Configuration");
+
 }
 
 <form asp-controller="AdminCustomerQuery" asp-action="Configure" method="post">
