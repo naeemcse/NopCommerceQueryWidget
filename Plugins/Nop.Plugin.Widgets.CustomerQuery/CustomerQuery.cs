@@ -68,32 +68,24 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
         #region Methods
 
-        /// <summary>
-        /// Gets widget zones where this widget should be rendered
-        /// </summary>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the widget zones
-        /// </returns>
-       /* public Task<IList<string>> GetWidgetZonesAsync()
-        {
-            return Task.FromResult<IList<string>>(new List<string> { PublicWidgetZones.HeaderLinksAfter });
-        }
-
-
-        public Type GetWidgetViewComponent(string widgetZone)
-        {
-            return typeof(WidgetsCustomerQueryViewComponent);
-        }*/
+      
 
         public Task<IList<string>> GetWidgetZonesAsync()
         {
             return Task.FromResult<IList<string>>(new List<string>
+                {
+                    "header_menu_after",        // to show after top nav items
+                    "footer",                   // to show in footer links
+                    "account_navigation"       // to show in the left sidebar of customer account area
+                 });
+        }
+
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
         {
-            PublicWidgetZones.HeaderMenuBefore,
-            PublicWidgetZones.Footer,
-            PublicWidgetZones.AccountNavigationAfter
-        });
+            return _webHelper.GetStoreLocation() + "Admin/AdminCustomerQuery/Configure";
         }
 
         public Type GetWidgetViewComponent(string widgetZone)
@@ -122,9 +114,9 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
             };
 
-            await _topicService.InsertTopicAsync(topic);
+          //  await _topicService.InsertTopicAsync(topic);
             // Add URL record for the topic
-            await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
+         //   await _urlRecordService.SaveSlugAsync(topic, "customer-query", 0);
             // Localization
             await _localizationService.AddOrUpdateLocaleResourceAsync(new Dictionary<string, string>
             {
@@ -150,8 +142,8 @@ namespace Nop.Plugin.Widgets.CustomerQuery
                 ["Plugins.Widgets.CustomerQuery.Email.StoreOwner.Body"] = "<p>A new customer query has been submitted:</p><p>From: %CustomerName% (%CustomerEmail%)</p><p>Subject: %QuerySubject%</p><p>Message:</p><p>%QueryMessage%</p>",
                 // Display Names (Labels)
                 ["Plugins.Widgets.CustomerQuery.List.SearchEmail"] = "Email",
-                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnFrom"] = "Start Date",
-                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnTo"] = "End Date",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnFrom"] = "Start date",
+                ["Plugins.Widgets.CustomerQuery.List.SearchCreatedOnTo"] = "End date",
 
                 // Hints (tooltips)
                 ["Plugins.Widgets.CustomerQuery.List.SearchEmail.Hint"] = "Search by customer email",
@@ -227,7 +219,7 @@ namespace Nop.Plugin.Widgets.CustomerQuery
             await _localizationService.DeleteLocaleResourcesAsync("Plugins.Widgets.CustomerQuery");
 
             // Remove the topic and its URL record
-            var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQuery");
+            /*var topic = await _topicService.GetTopicBySystemNameAsync("CustomerQuery");
             if (topic != null)
             {
                 // First get the URL records for this topic
@@ -241,15 +233,13 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
                 // Delete topic
                 await _topicService.DeleteTopicAsync(topic);
-            }
-
+            }*/
 
             // Cleanup
             await base.UninstallAsync();
         }
 
         #endregion
-
 
         #region Properties
 
