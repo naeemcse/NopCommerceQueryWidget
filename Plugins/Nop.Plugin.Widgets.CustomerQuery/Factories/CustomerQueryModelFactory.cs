@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Admin;
+using Nop.Plugin.Widgets.CustomerQuery.Models.Customer;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Public;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Services.Configuration;
@@ -14,12 +15,18 @@ namespace Nop.Plugin.Widgets.CustomerQuery.Factories;
 public class CustomerQueryModelFactory : ICustomerQueryModelFactory
 {
 
+    #region Fields
+
     private readonly ICustomerQueryService _customerQueryService;
     private readonly IBaseAdminModelFactory _baseAdminModelFactory;
     private readonly IWorkContext _workContext;
     private readonly ISettingService _settingService;
     private readonly IEmailAccountService _emailAccountService;
     private readonly IStoreContext _storeContext;
+
+    #endregion
+
+    #region Ctor
 
     public CustomerQueryModelFactory(
        ICustomerQueryService customerQueryService,
@@ -37,7 +44,9 @@ public class CustomerQueryModelFactory : ICustomerQueryModelFactory
         _storeContext = storeContext;
     }
 
+    #endregion
 
+    #region Methods
     /// <summary>
     /// Prepare customer query search model
     /// </summary>
@@ -133,5 +142,40 @@ public class CustomerQueryModelFactory : ICustomerQueryModelFactory
         return model;
     }
 
+    public virtual async Task<CustomerMyQueryListModel> PrepareCustomerQueryListModelAsync()
+    {        
+        var model = new CustomerMyQueryListModel();
 
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        var myEmail  = customer.Email;
+        // Get queries
+        var queries = await _customerQueryService.GetAllQueriesAsync(email: myEmail);
+          
+
+        // Prepare list model
+
+        foreach (var query in queries)
+        {
+            // Prepare query model
+            var queryModel = new CustomerQueryModel
+            {
+                Id = query.Id,
+                Name = query.Name,
+                Email = query.Email,
+                Subject = query.Subject,
+                Message = query.Message,
+                CreatedOnUtc = query.CreatedOnUtc
+            };
+            model.CustomerQueries.Add(queryModel);
+        }
+
+
+
+        return model;
+    }
+
+
+
+
+    #endregion
 }

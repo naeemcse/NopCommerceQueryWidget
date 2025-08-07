@@ -24,6 +24,7 @@ public class CustomerQueryService : ICustomerQueryService
     private readonly IMessageTemplateService _messageTemplateService;
     private readonly IWorkflowMessageService _workflowMessageService;
     private readonly IWorkContext _workContext;
+  
 
     #endregion
 
@@ -207,5 +208,14 @@ public class CustomerQueryService : ICustomerQueryService
         }
 
     }
+   
+    
+    public virtual async Task<string> GetCurentCustomerEmailAsync()
+    {
+        var customer = await _workContext.GetCurrentCustomerAsync();
+        return customer?.Email ?? string.Empty;
+    }
+
+
     #endregion
 }

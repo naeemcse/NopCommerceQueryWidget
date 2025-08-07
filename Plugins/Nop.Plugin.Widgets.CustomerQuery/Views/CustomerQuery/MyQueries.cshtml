@@ -1,0 +1,25 @@
+﻿@using Nop.Plugin.Widgets.CustomerQuery.Models.Customer
+@using Nop.Web.Components
+@using Nop.Web.Models.Customer
+@model CustomerMyQueryListModel
+@{
+    Layout = "_ColumnsTwo";
+}
+
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Info })
+}
+<h2> This is My query page </h2>
+
+@{
+    foreach(var query in Model.CustomerQueries)
+    {
+        <div class="query-item">
+            <h3>@query.Subject</h3>
+            <p>@query.Message</p>
+            <span>@query.CreatedOnUtc.ToString("g")</span>
+            <a href="@Url.Action("Details", "CustomerQuery", new { id = query.Id })">View Details</a>
+        </div>
+    }
+}

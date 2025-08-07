@@ -2,6 +2,9 @@
 using Nop.Core;
 using Nop.Core.Domain.Security;
 using Nop.Plugin.Widgets.CustomerQuery.Domain;
+using Nop.Plugin.Widgets.CustomerQuery.Factories;
+using Nop.Plugin.Widgets.CustomerQuery.Models.Admin;
+using Nop.Plugin.Widgets.CustomerQuery.Models.Customer;
 using Nop.Plugin.Widgets.CustomerQuery.Models.Public;
 using Nop.Plugin.Widgets.CustomerQuery.Services;
 using Nop.Services.Localization;
@@ -10,21 +13,31 @@ using Nop.Web.Controllers;
 namespace Nop.Plugin.Widgets.CustomerQuery.Controller;
 public class CustomerQueryController: BasePublicController
 {
+    #region Fields
     private readonly ICustomerQueryService _customerQueryService;
-
+    private readonly IWorkContext _workContext;
     protected readonly CaptchaSettings _captchaSettings;
     protected readonly ILocalizationService _localizationService;
+    private readonly ICustomerQueryModelFactory _customerQueryModelFactory;
+    #endregion
 
-
+    #region ctor
     public CustomerQueryController(
         ICustomerQueryService customerQueryService,
         IWorkContext workContext , CaptchaSettings captchaSettings,
-        ILocalizationService localizationService)
+        ILocalizationService localizationService, ICustomerQueryModelFactory customerQueryModelFactory
+        )
     {
         _captchaSettings = captchaSettings;
         _customerQueryService = customerQueryService;
         _localizationService = localizationService;
+        _workContext = workContext;
+        _customerQueryModelFactory = customerQueryModelFactory;
     }
+
+    #endregion
+
+    #region Methods
 
     public IActionResult Index()
     {
@@ -65,6 +78,16 @@ public class CustomerQueryController: BasePublicController
     public IActionResult Success()
     {
         return View("~/Plugins/Widgets.CustomerQuery/Views/CustomerQuery/Success.cshtml");
-
     }
+
+    public async Task<IActionResult> MyQuires()
+    {
+        //var model = new CustomerMyQuerySearchModel();
+               
+     var model = await _customerQueryModelFactory.PrepareCustomerQueryListModelAsync();
+
+        return View("~/Plugins/Widgets.CustomerQuery/Views/CustomerQuery/MyQueries.cshtml" ,model);
+    }
+
+#endregion
 }
