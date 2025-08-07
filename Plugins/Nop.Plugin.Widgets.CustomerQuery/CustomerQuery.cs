@@ -74,9 +74,10 @@ namespace Nop.Plugin.Widgets.CustomerQuery
         {
             return Task.FromResult<IList<string>>(new List<string>
                 {
-                    "header_menu_after",        // to show after top nav items
-                    "footer",                   // to show in footer links
-                    "account_navigation"       // to show in the left sidebar of customer account area
+                    PublicWidgetZones.HeaderMenuAfter,
+                    PublicWidgetZones.Footer, 
+                    PublicWidgetZones.AccountNavigationAfter,                     
+                        
                  });
         }
 
@@ -90,7 +91,12 @@ namespace Nop.Plugin.Widgets.CustomerQuery
 
         public Type GetWidgetViewComponent(string widgetZone)
         {
-            return typeof(WidgetsCustomerQueryViewComponent);
+            if(widgetZone == PublicWidgetZones.AccountNavigationAfter)
+            {
+                return typeof(WidgetsCustomerQueryMyAccountViewComponents);
+            }
+            else 
+                return typeof(WidgetsCustomerQueryViewComponent);
         }
 
       

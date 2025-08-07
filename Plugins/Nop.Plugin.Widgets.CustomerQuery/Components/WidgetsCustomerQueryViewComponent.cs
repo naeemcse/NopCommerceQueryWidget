@@ -25,7 +25,7 @@ public class WidgetsCustomerQueryViewComponent: NopViewComponent
             displayType = "navigation";
         else if (widgetZone == "footer")
             displayType = "footer";
-        else if (widgetZone == "account_navigation")
+        else if (widgetZone == "account_navigation_after")
             displayType = "profile";
         else
             displayType = string.Empty;
@@ -51,7 +51,7 @@ public class WidgetsCustomerQueryViewComponent: NopViewComponent
         };
 
         if(displayType=="footer")
-              return View("~/Plugins/Widgets.CustomerQuery/Views/Footer.cshtml", model);
+              return View("~/Plugins/Widgets.CustomerQuery/Views/Footer.cshtml");
 
         return View("~/Plugins/Widgets.CustomerQuery/Views/PublicInfo.cshtml", model);
     }

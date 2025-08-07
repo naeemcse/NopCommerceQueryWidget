@@ -1,0 +1,9 @@
+﻿
+@{
+    var currentPath = Context.Request.Path.Value?.ToLowerInvariant();
+    var isMyQueryPage = currentPath == "/my-query";
+}
+
+<li class="customer-navigation-item @(isMyQueryPage ? "active" : "inactive")">
+    <a href="/my-query">My Queries</a>
+</li>

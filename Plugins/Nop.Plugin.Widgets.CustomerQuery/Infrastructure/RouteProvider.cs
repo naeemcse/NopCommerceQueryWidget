@@ -22,6 +22,13 @@ public class RouteProvider : IRouteProvider
             pattern: "customer-query/success",
             defaults: new { controller = "CustomerQuery", action = "Success" }
         );
+        endpointRouteBuilder.MapControllerRoute(
+            name: "CustomerMyQueryList",
+            pattern: "my-query",
+            defaults: new { controller = "CustomerQuery", action = "MyQuires" }
+        );
+
+
     }
 
     /// <summary>

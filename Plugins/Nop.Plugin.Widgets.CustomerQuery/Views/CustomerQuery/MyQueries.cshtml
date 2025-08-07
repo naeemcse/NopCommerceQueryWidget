@@ -8,18 +8,70 @@
 
 @section left
 {
-    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Info })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent))
 }
-<h2> This is My query page </h2>
 
-@{
-    foreach(var query in Model.CustomerQueries)
-    {
-        <div class="query-item">
-            <h3>@query.Subject</h3>
-            <p>@query.Message</p>
-            <span>@query.CreatedOnUtc.ToString("g")</span>
-            <a href="@Url.Action("Details", "CustomerQuery", new { id = query.Id })">View Details</a>
-        </div>
-    }
-}
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - My Queries</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.CustomerQueries.Count > 0)
+        {
+            <div class="section recurring-payments">
+                <div class="title">
+                    <strong>My Queries</strong>
+                </div>                                  
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />                                
+                                <col />                                
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="email">
+                                       Email
+                                    </th>
+                                    <th class="subject">
+                                       Subject
+                                    </th>
+                                    <th class="query">
+                                       Query
+                                    </th>
+                                    <th class="total-cycles">
+                                        Time
+                                    </th>                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.CustomerQueries)
+                                {
+                                    <tr>
+                                        <td class="start-date">
+                                        @item.Email
+                                        </td>
+                                        <td class="cycle-info">
+                                            @item.Subject
+                                        </td>
+                                        <td class="next-payment">
+                                            @item.Message
+                                        </td>
+                                    <td class="total-cycles">
+                                        @item.CreatedOnUtc.AddHours(6).ToString("g")
+                                    </td>
+
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+               
+            </div>
+           
+        }
+
+       </div>
+</div>
